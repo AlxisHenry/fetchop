@@ -1,0 +1,1 @@
+export { Fetchop } from './src/Fetchop'
