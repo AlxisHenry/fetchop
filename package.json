@@ -1,6 +1,6 @@
 {
   "name": "fetchop",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Wrapper around the fetch API",
   "main": "dist/index.js",
   "exports": {
