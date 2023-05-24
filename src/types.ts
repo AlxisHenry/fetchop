@@ -1,3 +1,6 @@
+import { Fetchop } from './Fetchop';
+import Helpers from './Helpers';
+
 export enum Method {
   GET = 'GET',
   POST = 'POST',
@@ -40,13 +43,6 @@ export enum AuthorizationType {
   BEARER = 'Bearer',
   BASIC = 'Basic',
   DIGEST = 'Digest'
-}
-
-export enum Timeout {
-  REDUCED = 1000,
-  DEFAULT = 5000,
-  EXTENDED = 9000,
-  INFINITE = 0
 }
 
 export enum Cache {
@@ -93,63 +89,78 @@ export enum CredentialsPolicy {
 }
 
 export type Authorization = {
-  type: AuthorizationType;
-  token: string;
+  type: string;
+  token?: string;
 };
 
 export type FetchopAttributes = {
   baseUrl?: string | null;
-  recurringEndpoints?: string[];
-  defaultMethod?: Method;
+  recurrentEndpoints?: string[];
+  defaultMethod?: string;
   authorization?: Authorization;
-  timeout?: Timeout;
+  timeout?: number;
   retry?: boolean;
-  cache?: Cache;
-  credentials?: Credentials;
-  mode?: Mode;
-  redirect?: Redirect;
-  referrer?: Referrer;
-  referrerPolicy?: ReferrerPolicy;
+  cache?: string;
+  credentials?: string;
+  mode?: string;
+  redirect?: string;
+  referrer?: string;
+  referrerPolicy?: string;
   integrity?: string;
   keepalive?: boolean;
   signal?: AbortSignal | null;
   window?: any;
   agent?: any;
-  credentialsPolicy?: CredentialsPolicy;
+  credentialsPolicy?: string;
+};
+
+export type HelperObject = {
+  [key: string]: any | { value: any; type?: string; different?: boolean };
+};
+
+export type HelperCompareObject = { [key: string]: boolean };
+
+export type AttributeMethods = {
+  getter: string;
+  setter: string;
 };
 
 export interface FetchopAttributesInterface {
   getBaseUrl(): string | null;
-  getRecurringEndpoints(): string[];
-  getDefaultMethod(): Method;
+  getRecurrentEndpoints(): string[];
+  getDefaultMethod(): string;
   getAuthorization(): Authorization;
-  getTimeout(): Timeout;
+  getTimeout(): number;
   getRetry(): boolean;
-  getCache(): Cache;
-  getCredentials(): Credentials;
-  getMode(): Mode;
-  getRedirect(): Redirect;
-  getReferrer(): Referrer;
-  getReferrerPolicy(): ReferrerPolicy;
+  getCache(): string;
+  getCredentials(): string;
+  getMode(): string;
+  getRedirect(): string;
+  getReferrer(): string;
+  getReferrerPolicy(): string;
   getIntegrity(): string;
   getKeepalive(): boolean;
   getSignal(): AbortSignal | null;
   getWindow(): any;
   getAgent(): any;
-  getCredentialsPolicy(): CredentialsPolicy;
+  getCredentialsPolicy(): string;
 }
 
 export interface FetchopInterface {
+  [key: string]: Function | any;
   call(url: string, options?: {}): void;
   get(url: string, options?: {}): void;
   post(url: string, options?: {}): void;
   put(url: string, options?: {}): void;
   delete(url: string, options?: {}): void;
   patch(url: string, options?: {}): void;
-  recuring(endpoint: string, id?: number, options?: {}): void;
+  recurrent(endpoint: string, id?: number, options?: {}): void;
+  helpers(): Helpers;
 }
 
 export interface HelpersInterface {
-  getDefaultsAttributes(): FetchopAttributes;
-  getDefaultsMethods(): string[];
+  getDefaultAttributes(): FetchopAttributes;
+  compareCurrentToDefault(): HelperCompareObject;
+  getAllowedMethods(): string[] | HelperObject;
+  getCurrentAttributes(): HelperObject;
 }
