@@ -1,4 +1,5 @@
 /**
+dosent support query strings requests
  * Below is the default configuration of the Fetchop class.
  * 
  * Note that the default configuration can be overridden by passing a configuration object to the constructor or by calling the set methods.
