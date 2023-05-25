@@ -141,14 +141,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
    * This method is used to make a request.
    */
   call(uri: string, options = {}): void {
-    let method: string = this.getDefaultMethod();
-    let url: string = uri;
-    if (this.baseUrl) url = this.baseUrl + uri;
-    if (uri.match(/^[A-Z]+::\/[a-z]+$/)) {
-      method = uri.split('::')[0] as Method;
-      url = uri.split('::')[1];
-      options;
-    }
+
   }
 
   /**
@@ -284,7 +277,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setRecurrentEndpoints(recurrentEndpoints: string[]): void {
-    // if (typeof recurrentEndpoints !== 'object') throw new Error('The recurrentEndpoints must be an array.');
+    if (typeof recurrentEndpoints !== 'object') throw new Error('The recurrentEndpoints must be an array.');
     if (this.getBaseUrl() === null)
       throw new Error('You must set the baseUrl attribute to use the recurrent endpoints feature.');
     recurrentEndpoints.forEach(endpoint => {
@@ -295,14 +288,14 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setDefaultMethod(method: string): void {
-    // if (typeof method !== 'string') throw new Error('The method must be a string.');
+    if (typeof method !== 'string') throw new Error('The method must be a string.');
     this.isAllowed('method', method, Method);
     this.defaultMethod = method;
   }
 
   protected setAuthorization(authorization: Authorization): void {
-    // if (typeof authorization !== 'object') throw new Error('The authorization must be an object.');
-    // if (typeof authorization.type !== 'string') throw new Error('The authorization type must be a string.');
+    if (typeof authorization !== 'object') throw new Error('The authorization must be an object.');
+    if (typeof authorization.type !== 'string') throw new Error('The authorization type must be a string.');
     this.isAllowed('authorization type', authorization.type, AuthorizationType);
     this.authorization = authorization;
   }
@@ -319,58 +312,58 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setRetry(retry: boolean): void {
-    // if (typeof retry !== "boolean") throw new Error('The retry must be a boolean.');
+    if (typeof retry !== "boolean") throw new Error('The retry must be a boolean.');
     this.retry = retry;
   }
 
   protected setCache(cache: string): void {
-    // if (typeof cache !== "string") throw new Error('The cache must be a string.');
+    if (typeof cache !== "string") throw new Error('The cache must be a string.');
     this.isAllowed('cache', cache, Cache);
     this.cache = cache;
   }
 
   protected setCredentials(credentials: string): void {
-    // if (typeof credentials !== "string") throw new Error('The credentials attribute must be a string.');
+    if (typeof credentials !== "string") throw new Error('The credentials attribute must be a string.');
     this.isAllowed('credentials', credentials, Credentials);
     this.credentials = credentials;
   }
 
   protected setMode(mode: string): void {
-    // if (typeof mode !== "string") throw new Error('The mode must be a string.');
+    if (typeof mode !== "string") throw new Error('The mode must be a string.');
     this.isAllowed('mode', mode, Mode);
     this.mode = mode;
   }
 
   protected setRedirect(redirect: string): void {
-    // if (typeof redirect !== "string") throw new Error('The redirect must be a string.');
+    if (typeof redirect !== "string") throw new Error('The redirect must be a string.');
     this.isAllowed('redirect', redirect, Redirect);
     this.redirect = redirect;
   }
 
   protected setReferrer(referrer: string): void {
-    // if (typeof referrer !== "string") throw new Error('The referrer must be a string.');
+    if (typeof referrer !== "string") throw new Error('The referrer must be a string.');
     this.isAllowed('referrer', referrer, Referrer);
     this.referrer = referrer;
   }
 
   protected setReferrerPolicy(referrerPolicy: string): void {
-    // if (typeof referrerPolicy !== "string") throw new Error('The referrerPolicy must be a string.');
+    if (typeof referrerPolicy !== "string") throw new Error('The referrerPolicy must be a string.');
     this.isAllowed('referrerPolicy', referrerPolicy, ReferrerPolicy);
     this.referrerPolicy = referrerPolicy;
   }
 
   protected setIntegrity(integrity: string): void {
-    // if (typeof integrity !== "string") throw new Error('The integrity must be a string.');
+    if (typeof integrity !== "string") throw new Error('The integrity must be a string.');
     this.integrity = integrity;
   }
 
   protected setKeepalive(keepalive: boolean): void {
-    // if (typeof keepalive !== "boolean") throw new Error('The keepalive must be a boolean.');
+    if (typeof keepalive !== "boolean") throw new Error('The keepalive must be a boolean.');
     this.keepalive = keepalive;
   }
 
   protected setSignal(signal: AbortSignal | null): void {
-    // if (typeof signal !== "object") throw new Error('The signal must be an object.');
+    if (typeof signal !== "object") throw new Error('The signal must be an object.');
     this.signal = signal;
   }
 
@@ -383,7 +376,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setCredentialsPolicy(credentialsPolicy: string): void {
-    // if (typeof credentialsPolicy !== "string") throw new Error('The credentialsPolicy must be a string.');
+    if (typeof credentialsPolicy !== "string") throw new Error('The credentialsPolicy must be a string.');
     this.isAllowed('credentialsPolicy', credentialsPolicy, CredentialsPolicy);
     this.credentialsPolicy = credentialsPolicy;
   }
