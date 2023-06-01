@@ -19,7 +19,10 @@ let defaultConfiguration: FetchopAttributes = {
 	signal: null,
 	window: null,
 	agent: null,
-	credentialsPolicy: 'omit'
+	credentialsPolicy: 'omit',
+	body: {},
+	contentTypes: ['application/json'],
+	accept: 'application/json'
 }
 
 describe('Fetchop', () => {
@@ -66,6 +69,11 @@ describe('Fetchop', () => {
 		expect(fetchop.getWindow()).toBe(null);
 		expect(fetchop.getAgent()).toBe(null);
 		expect(fetchop.getCredentialsPolicy()).toBe('omit');
+		expect(fetchop.getBody()).toBeInstanceOf(Object);
+		expect(fetchop.getBody()).toStrictEqual({});
+		expect(fetchop.getContentTypes()).toBeInstanceOf(Array);
+		expect(fetchop.getContentTypes()).toStrictEqual(['application/json']);
+		expect(fetchop.getAccept()).toBe('application/json');
 	});
 	describe('Incorrect configuration', () => {
 		it('should throw an error when baseUrl is not defined but recurrentEndpoints is defined', () => {

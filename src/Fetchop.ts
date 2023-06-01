@@ -37,6 +37,9 @@ import {
  * @private {string | null} window - The window used by the class.
  * @private {string | null} agent - The agent used by the class.
  * @private {CredentialsPolicy} credentialsPolicy - The credentials policy used by the class.
+ * @private {string | object} body - The body used by the class.
+ * @private {string[]} contentTypes - The content types used by the class.
+ * @private {string} accept - The accept used by the class.
  * @private {RegExp} recurrentEndpointRegex - The regex used to check if the recurrent endpoint follow the pattern.
  * @static {Helpers} helpers - This method allwo you to use the helpers methods.
  * @static {Fetchop} initialize - This method is used to create a new instance of the Fetchop class with a specific configuration.
@@ -51,7 +54,43 @@ import {
  * @method {string | null} getBaseUrl - Get the baseUrl attribute.
  * @method {string[]} getRecurrentEndpoints - Get the recurrentEndpoints attribute.
  * @method {Method} getDefaultMethod - Get the defaultMethod attribute.
- *
+ * @method {Authorization} getAuthorization - Get the authorization attribute.
+ * @method {Timeout} getTimeout - Get the timeout attribute.
+ * @method {boolean} getRetry - Get the retry attribute.
+ * @method {Cache} getCache - Get the cache attribute.
+ * @method {Credentials} getCredentials - Get the credentials attribute.
+ * @method {Mode} getMode - Get the mode attribute.
+ * @method {Redirect} getRedirect - Get the redirect attribute.
+ * @method {Referrer} getReferrer - Get the referrer attribute.
+ * @method {ReferrerPolicy} getReferrerPolicy - Get the referrerPolicy attribute.
+ * @method {string} getIntegrity - Get the integrity attribute.
+ * @method {boolean} getKeepalive - Get the keepalive attribute.
+ * @method {AbortSignal | null} getSignal - Get the signal attribute.
+ * @method {string | null} getWindow - Get the window attribute.
+ * @method {string | null} getAgent - Get the agent attribute.
+ * @method {CredentialsPolicy} getCredentialsPolicy - Get the credentialsPolicy attribute.
+ * @method {string | object} getBody - Get the body attribute.
+ * @method {string[]} getContentTypes - Get the contentTypes attribute.
+ * @method {string} getAccept - Get the accept attribute.
+ * @method {RegExp} getRecurrentEndpointRegex - Get the recurrentEndpointRegex attribute.
+ * @method {void} setBaseUrl - Set the baseUrl attribute.
+ * @method {void} setRecurrentEndpoints - Set the recurrentEndpoints attribute.
+ * @method {void} setDefaultMethod - Set the defaultMethod attribute.
+ * @method {void} setAuthorization - Set the authorization attribute.
+ * @method {void} setTimeout - Set the timeout attribute.
+ * @method {void} setRetry - Set the retry attribute.
+ * @method {void} setCache - Set the cache attribute.
+ * @method {void} setCredentials - Set the credentials attribute.
+ * @method {void} setMode - Set the mode attribute.
+ * @method {void} setRedirect - Set the redirect attribute.
+ * @method {void} setReferrer - Set the referrer attribute.
+ * @method {void} setReferrerPolicy - Set the referrerPolicy attribute.
+ * @method {void} setIntegrity - Set the integrity attribute.
+ * @method {void} setKeepalive - Set the keepalive attribute.
+ * @method {void} setSignal - Set the signal attribute.
+ * @method {void} setWindow - Set the window attribute.
+ * @method {void} setAgent - Set the agent attribute.
+ * @method {void} setCredentialsPolicy - Set the credentialsPolicy attribute.
  */
 export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   //#region Attributes
@@ -76,6 +115,9 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   private window: string | null = null;
   private agent: string | null = null;
   private credentialsPolicy: string = CredentialsPolicy.OMIT;
+  private body: object = {};
+  private contentTypes: string[] = ['application/json'];
+  private accept: string = 'application/json';
   private static recurrentEndpointRegex: RegExp = /^([A-Z]+)::\/([a-zA-Z0-9\/:\-]+)$/;
   //#endregion
 
@@ -99,8 +141,8 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
    *
    * @param {string} uri - The uri of the request, need to use the syntax (METHOD::{url}). If you set the baseUrl, you can pass only the path to the call method.
    */
-  static call(uri: string, options = {}) {
-    return new Fetchop().call(uri, options);
+  static async call(uri: string, options: FetchopAttributes = {}): Promise<void> {
+    return await new Fetchop().call(uri, options);
   }
   //#endregion
 
@@ -140,51 +182,68 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   /**
    * This method is used to make a request.
    */
-  call(uri: string, options = {}): void {
-
+  async call(uri: string, options: FetchopAttributes = {}): Promise<void> {
+    let isConfigured: boolean = Object.keys(options).length !== 0;
+    let currentConfiguration = this.helpers().getCurrentAttributes(true);
+    if (isConfigured) this.configure(options);
+    let { method, url } = this.helpers().parseUri(uri, this.baseUrl, this.defaultMethod);
+    let init: {} = {
+      method: method,
+      ...this.getHeaders(),
+    };
+    if (method === Method.POST) {
+      init = {
+        ...init,
+        body: typeof this.body === 'object' ? JSON.stringify(this.body) : this.body,
+      };
+    }
+    let response = await fetch(url, init)
+    let data = await response.json();
+    if (isConfigured) this.configure(currentConfiguration);
+    return data;
   }
 
   /**
    * This method is used to make get request.
    */
-  get(url: string, options?: {}): void {
-    this.call(Method.GET + '::/' + url, options);
+  async get(url: string, options?: FetchopAttributes): Promise<void> {
+    return await this.call(Method.GET + '::' + url, options);
   }
 
   /**
    * This method is used to make post request.
    */
-  post(url: string, options?: {}): void {
-    this.call(Method.POST + '::/' + url, options);
+  async post(url: string, options?: FetchopAttributes): Promise<void> {
+    return await this.call(Method.POST + '::' + url, options);
   }
 
   /**
    * This method is used to make put request.
    */
-  put(url: string, options?: {}): void {
-    this.call(Method.PUT + '::/' + url, options);
+  async put(url: string, options?: FetchopAttributes): Promise<void> {
+    return await this.call(Method.PUT + '::' + url, options);
   }
 
   /**
    * This method is used to make delete request.
    */
-  delete(url: string, options?: {}): void {
-    this.call(Method.DELETE + '::/' + url, options);
+  async delete(url: string, options?: FetchopAttributes): Promise<void> {
+    return await this.call(Method.DELETE + '::' + url, options);
   }
 
   /**
    * This method is used to make patch request.
    */
-  patch(url: string, options?: {}): void {
-    this.call(Method.PATCH + '::/' + url, options);
+  async patch(url: string, options?: FetchopAttributes): Promise<void> {
+    return await this.call(Method.PATCH + '::' + url, options);
   }
 
   /**
    * This method is used to make a request to a recurrent endpoint.
    */
-  recurrent(endpoint: string, id?: number, options?: {}): void {
-    if (id) endpoint = endpoint.replace(':id', id.toString());
-    this.call(endpoint, options);
+  async recurrent(endpoint: string, id?: number, options?: FetchopAttributes) {
+    // TODO: Handle the recurrent endpoints feature.
+    throw new Error('This method is not implemented yet.');
   }
   //#endregion
 
@@ -265,6 +324,43 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
     return this.recurrentEndpoints;
   }
 
+  getBody(): string | object {
+    return this.body;
+  }
+
+  getContentTypes(): string[] {
+    return this.contentTypes;
+  }
+
+  getAccept(): string {
+    return this.accept;
+  }
+
+  /**
+   * This method is used to generate headers object for fetch request.
+   */
+  private getHeaders() {
+    return {
+      headers: new Headers({
+        'Accept': this.getAccept(),
+        'Content-Type': this.getContentTypes().toString(),
+        'Cache-Control': this.getCache(),
+        'Credentials': this.getCredentials(),
+        'Mode': this.getMode(),
+        'Redirect': this.getRedirect(),
+        'Referrer': this.getReferrer(),
+        'Referrer-Policy': this.getReferrerPolicy(),
+        'Integrity': this.getIntegrity()
+      }),
+      keepalive: this.getKeepalive(),
+      signal: this.getSignal(),
+      window: this.getWindow(),
+      agent: this.getAgent(),
+      credentialsPolicy: this.getCredentialsPolicy(),
+      authorization: this.getAuthorization()
+    }
+  }
+
   static getRecurrentEndpointRegex(): RegExp {
     return this.recurrentEndpointRegex;
   }
@@ -272,7 +368,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
 
   //#region Setters
   protected setBaseUrl(baseUrl: string | null): void {
-    // if (typeof baseUrl !== "string" && baseUrl !== null) throw new Error('The baseUrl must be a string or null.');
+    if (typeof baseUrl !== "string" && baseUrl !== null) throw new Error('The baseUrl must be a string or null.');
     this.baseUrl = baseUrl;
   }
 
@@ -280,6 +376,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
     if (typeof recurrentEndpoints !== 'object') throw new Error('The recurrentEndpoints must be an array.');
     if (this.getBaseUrl() === null)
       throw new Error('You must set the baseUrl attribute to use the recurrent endpoints feature.');
+    if (recurrentEndpoints.length === 0) return;
     recurrentEndpoints.forEach(endpoint => {
       if (typeof endpoint !== 'string' || !endpoint.match(Fetchop.recurrentEndpointRegex))
         throw new Error('Every items of the array must be a string and follow the pattern (METHOD::/endpoint).');
@@ -379,6 +476,21 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
     if (typeof credentialsPolicy !== "string") throw new Error('The credentialsPolicy must be a string.');
     this.isAllowed('credentialsPolicy', credentialsPolicy, CredentialsPolicy);
     this.credentialsPolicy = credentialsPolicy;
+  }
+
+  protected setBody(body: string | object): void {
+    if (typeof body !== "object") throw new Error('The body must be an object.');
+    this.body = body;
+  }
+
+  protected setContentTypes(contentTypes: string[]): void {
+    if (typeof contentTypes !== "object") throw new Error('The contentTypes must be an array.');
+    this.contentTypes = contentTypes;
+  }
+
+  protected setAccept(accept: string): void {
+    if (typeof accept !== "string") throw new Error('The accept must be a string.');
+    this.accept = accept;
   }
   //#endregion
 }

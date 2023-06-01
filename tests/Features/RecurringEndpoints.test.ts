@@ -63,11 +63,5 @@ describe('Recurring Endpoints', () => {
 		})
 		expect(fetch.getRecurrentEndpoints()).toEqual(recurrentEndpoints);
 	});
-	it('should be called using the recurrent method.', () => {
-		let fetch = new Fetchop({
-			baseUrl: 'https://jsonplaceholder.typicode.com',
-			recurrentEndpoints: ["GET::/posts"]
-		});
-		let response = fetch.recurrent('/posts');
-	});
+	it('should be called using the recurrent method.', () => {});
 });

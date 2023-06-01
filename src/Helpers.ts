@@ -62,6 +62,35 @@ class Helpers implements HelpersInterface {
     };
   }
 
+  parseUri(uri: string, baseUrl: string|null, defaultMethod: string): {
+    method: string,
+    url: string
+  } {
+    let method: string = defaultMethod;
+    let path: string = baseUrl ?? "";
+    if (uri.split('::').length === 2) {
+      [method, path] = uri.split('::');
+      if (this.getAllowedMethods().includes(method.toUpperCase())) {
+        method = method.toUpperCase();
+      } else {
+        throw new Error('The given method is not allowed.');
+      }
+      if (baseUrl !== null) {
+        path = baseUrl + path;
+      }     
+    } else {
+      if (baseUrl !== null) {
+        uri = baseUrl + uri;
+      }
+      if (!uri.startsWith('http://') && !uri.startsWith('https://')) throw new Error('The given URI is not valid.');
+      path = uri;
+    }
+    return {
+      method: method,
+      url: path
+    }
+  }
+
   /**
    * Return attributes of the given object (new Fetchop or this).
    */

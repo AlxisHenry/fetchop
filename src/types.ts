@@ -112,6 +112,9 @@ export type FetchopAttributes = {
   window?: any;
   agent?: any;
   credentialsPolicy?: string;
+  body?: string | object;
+  contentTypes?: string[];
+  accept?: string;
 };
 
 export type HelperObject = {
@@ -144,6 +147,9 @@ export interface FetchopAttributesInterface {
   getWindow(): any;
   getAgent(): any;
   getCredentialsPolicy(): string;
+  getBody(): string | object;
+  getContentTypes(): string[];
+  getAccept(): string;
 }
 
 export interface FetchopInterface {
