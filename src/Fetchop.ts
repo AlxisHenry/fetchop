@@ -341,17 +341,17 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
    */
   private getHeaders() {
     return {
-      headers: new Headers({
+      mode: this.getMode(),
+      cache: this.getCache(),
+      credentials: this.getCredentials(),
+      headers: {
+        "Content-Type": this.getContentTypes(),
         'Accept': this.getAccept(),
-        'Content-Type': this.getContentTypes().toString(),
         'Cache-Control': this.getCache(),
-        'Credentials': this.getCredentials(),
-        'Mode': this.getMode(),
-        'Redirect': this.getRedirect(),
-        'Referrer': this.getReferrer(),
-        'Referrer-Policy': this.getReferrerPolicy(),
         'Integrity': this.getIntegrity()
-      }),
+      },
+      redirect: this.getRedirect(),
+      referrerPolicy: this.getReferrerPolicy(),
       keepalive: this.getKeepalive(),
       signal: this.getSignal(),
       window: this.getWindow(),
