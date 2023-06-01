@@ -9,6 +9,9 @@
       "require": "./dist/index.cjs"
     }
   },
+  "publishConfig": {
+    "@AlxisHenry:registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest",
