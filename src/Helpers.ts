@@ -62,12 +62,16 @@ class Helpers implements HelpersInterface {
     };
   }
 
-  parseUri(uri: string, baseUrl: string|null, defaultMethod: string): {
-    method: string,
-    url: string
+  parseUri(
+    uri: string,
+    baseUrl: string | null,
+    defaultMethod: string
+  ): {
+    method: string;
+    url: string;
   } {
     let method: string = defaultMethod;
-    let path: string = baseUrl ?? "";
+    let path: string = baseUrl ?? '';
     if (uri.split('::').length === 2) {
       [method, path] = uri.split('::');
       if (this.getAllowedMethods().includes(method.toUpperCase())) {
@@ -77,7 +81,7 @@ class Helpers implements HelpersInterface {
       }
       if (baseUrl !== null) {
         path = baseUrl + path;
-      }     
+      }
     } else {
       if (baseUrl !== null) {
         uri = baseUrl + uri;
@@ -88,7 +92,7 @@ class Helpers implements HelpersInterface {
     return {
       method: method,
       url: path
-    }
+    };
   }
 
   /**

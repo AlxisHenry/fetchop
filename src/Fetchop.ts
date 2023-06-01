@@ -189,15 +189,15 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
     let { method, url } = this.helpers().parseUri(uri, this.baseUrl, this.defaultMethod);
     let init: {} = {
       method: method,
-      ...this.getHeaders(),
+      ...this.getHeaders()
     };
     if (method === Method.POST) {
       init = {
         ...init,
-        body: typeof this.body === 'object' ? JSON.stringify(this.body) : this.body,
+        body: typeof this.body === 'object' ? JSON.stringify(this.body) : this.body
       };
     }
-    let response = await fetch(url, init)
+    let response = await fetch(url, init);
     let data = await response.json();
     if (isConfigured) this.configure(currentConfiguration);
     return data;
@@ -345,10 +345,10 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
       cache: this.getCache(),
       credentials: this.getCredentials(),
       headers: {
-        "Content-Type": this.getContentTypes(),
-        'Accept': this.getAccept(),
+        'Content-Type': this.getContentTypes(),
+        Accept: this.getAccept(),
         'Cache-Control': this.getCache(),
-        'Integrity': this.getIntegrity()
+        Integrity: this.getIntegrity()
       },
       redirect: this.getRedirect(),
       referrerPolicy: this.getReferrerPolicy(),
@@ -358,7 +358,7 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
       agent: this.getAgent(),
       credentialsPolicy: this.getCredentialsPolicy(),
       authorization: this.getAuthorization()
-    }
+    };
   }
 
   static getRecurrentEndpointRegex(): RegExp {
@@ -368,15 +368,15 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
 
   //#region Setters
   protected setBaseUrl(baseUrl: string | null): void {
-    if (typeof baseUrl !== "string" && baseUrl !== null) throw new Error('The baseUrl must be a string or null.');
+    if (typeof baseUrl !== 'string' && baseUrl !== null) throw new Error('The baseUrl must be a string or null.');
     this.baseUrl = baseUrl;
   }
 
   protected setRecurrentEndpoints(recurrentEndpoints: string[]): void {
     if (typeof recurrentEndpoints !== 'object') throw new Error('The recurrentEndpoints must be an array.');
+    if (recurrentEndpoints.length === 0) return;
     if (this.getBaseUrl() === null)
       throw new Error('You must set the baseUrl attribute to use the recurrent endpoints feature.');
-    if (recurrentEndpoints.length === 0) return;
     recurrentEndpoints.forEach(endpoint => {
       if (typeof endpoint !== 'string' || !endpoint.match(Fetchop.recurrentEndpointRegex))
         throw new Error('Every items of the array must be a string and follow the pattern (METHOD::/endpoint).');
@@ -409,58 +409,58 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setRetry(retry: boolean): void {
-    if (typeof retry !== "boolean") throw new Error('The retry must be a boolean.');
+    if (typeof retry !== 'boolean') throw new Error('The retry must be a boolean.');
     this.retry = retry;
   }
 
   protected setCache(cache: string): void {
-    if (typeof cache !== "string") throw new Error('The cache must be a string.');
+    if (typeof cache !== 'string') throw new Error('The cache must be a string.');
     this.isAllowed('cache', cache, Cache);
     this.cache = cache;
   }
 
   protected setCredentials(credentials: string): void {
-    if (typeof credentials !== "string") throw new Error('The credentials attribute must be a string.');
+    if (typeof credentials !== 'string') throw new Error('The credentials attribute must be a string.');
     this.isAllowed('credentials', credentials, Credentials);
     this.credentials = credentials;
   }
 
   protected setMode(mode: string): void {
-    if (typeof mode !== "string") throw new Error('The mode must be a string.');
+    if (typeof mode !== 'string') throw new Error('The mode must be a string.');
     this.isAllowed('mode', mode, Mode);
     this.mode = mode;
   }
 
   protected setRedirect(redirect: string): void {
-    if (typeof redirect !== "string") throw new Error('The redirect must be a string.');
+    if (typeof redirect !== 'string') throw new Error('The redirect must be a string.');
     this.isAllowed('redirect', redirect, Redirect);
     this.redirect = redirect;
   }
 
   protected setReferrer(referrer: string): void {
-    if (typeof referrer !== "string") throw new Error('The referrer must be a string.');
+    if (typeof referrer !== 'string') throw new Error('The referrer must be a string.');
     this.isAllowed('referrer', referrer, Referrer);
     this.referrer = referrer;
   }
 
   protected setReferrerPolicy(referrerPolicy: string): void {
-    if (typeof referrerPolicy !== "string") throw new Error('The referrerPolicy must be a string.');
+    if (typeof referrerPolicy !== 'string') throw new Error('The referrerPolicy must be a string.');
     this.isAllowed('referrerPolicy', referrerPolicy, ReferrerPolicy);
     this.referrerPolicy = referrerPolicy;
   }
 
   protected setIntegrity(integrity: string): void {
-    if (typeof integrity !== "string") throw new Error('The integrity must be a string.');
+    if (typeof integrity !== 'string') throw new Error('The integrity must be a string.');
     this.integrity = integrity;
   }
 
   protected setKeepalive(keepalive: boolean): void {
-    if (typeof keepalive !== "boolean") throw new Error('The keepalive must be a boolean.');
+    if (typeof keepalive !== 'boolean') throw new Error('The keepalive must be a boolean.');
     this.keepalive = keepalive;
   }
 
   protected setSignal(signal: AbortSignal | null): void {
-    if (typeof signal !== "object") throw new Error('The signal must be an object.');
+    if (typeof signal !== 'object') throw new Error('The signal must be an object.');
     this.signal = signal;
   }
 
@@ -473,23 +473,23 @@ export class Fetchop implements FetchopInterface, FetchopAttributesInterface {
   }
 
   protected setCredentialsPolicy(credentialsPolicy: string): void {
-    if (typeof credentialsPolicy !== "string") throw new Error('The credentialsPolicy must be a string.');
+    if (typeof credentialsPolicy !== 'string') throw new Error('The credentialsPolicy must be a string.');
     this.isAllowed('credentialsPolicy', credentialsPolicy, CredentialsPolicy);
     this.credentialsPolicy = credentialsPolicy;
   }
 
   protected setBody(body: string | object): void {
-    if (typeof body !== "object") throw new Error('The body must be an object.');
+    if (typeof body !== 'object') throw new Error('The body must be an object.');
     this.body = body;
   }
 
   protected setContentTypes(contentTypes: string[]): void {
-    if (typeof contentTypes !== "object") throw new Error('The contentTypes must be an array.');
+    if (typeof contentTypes !== 'object') throw new Error('The contentTypes must be an array.');
     this.contentTypes = contentTypes;
   }
 
   protected setAccept(accept: string): void {
-    if (typeof accept !== "string") throw new Error('The accept must be a string.');
+    if (typeof accept !== 'string') throw new Error('The accept must be a string.');
     this.accept = accept;
   }
   //#endregion
