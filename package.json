@@ -19,7 +19,8 @@
     "prettier": "prettier --config .prettierrc './src/**/*.ts' '*.ts' --write",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "docs:deploy": "vitepress build docs && gh-pages -d docs/.vitepress/dist"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "vitepress": "^1.0.0-beta.2"
   },
   "dependencies": {
+    "gh-pages": "^5.0.0",
     "ts-node": "^10.9.1"
   }
 }
