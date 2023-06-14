@@ -4,6 +4,7 @@ const repositoryLink = "https://github.com/AlxisHenry/Fetchop";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: "/fetchop/",
   title: "Fetchop",
   description: "Fetch API wrapper",
   lastUpdated: true,

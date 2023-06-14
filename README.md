@@ -1,5 +1,7 @@
 # Getting Started
 
+Click [here](https://www.npmjs.com/package/fetchop) to view the package on npm.
+
 ## Installation
 
 ### Prerequisites
